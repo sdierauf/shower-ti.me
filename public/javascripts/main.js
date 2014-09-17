@@ -10,7 +10,7 @@
   // var currentUser = findCurrentUser();
   var currentTime = 0;
   var timeoutStore;
-  var timeIncrementInMs = 10;
+  var timeIncrementInMs = 100;
   var timeCheck;
 
   /*
@@ -18,8 +18,16 @@
   */
   function init() {
     console.log('init!');
-    // setup();
+    setup();
     startTimer();
+  }
+
+  /*
+   * Binds to dom elements and initializes variables
+   */
+  function setup() {
+    currentTime = 0;
+    timeIncrementInMs = 100;
   }
 
   /*
@@ -40,10 +48,10 @@
       timeCheck = Date.now();
     }
     var intervalCheck = Date.now();
-    if (intervalCheck - timeCheck > 10) {
+    if (intervalCheck - timeCheck > timeIncrementInMs) {
       currentTime += intervalCheck - timeCheck;
     } else {
-      currentTime += 10;
+      currentTime += timeIncrementInMs;
     }
     redrawTimer();
     timeCheck = Date.now();
@@ -57,8 +65,8 @@
     var timeInSeconds = currentTime / 1000;
     if (timeInSeconds > 60) {
       timeInSeconds = 0;
-      var timeInMinutes = parseInt(document.getElementById('timerMinutes'), 10) + 1;
-      document.getElementById('timerMinutes').innerHTML = timeInMinutes;
+      //var timeInMinutes = parseInt(document.getElementById('timerMinutes'), 10) + 1;
+      //document.getElementById('timerMinutes').innerHTML = timeInMinutes;
     }
     document.getElementById('timerSeconds').innerHTML = timeInSeconds;
   }
@@ -90,6 +98,7 @@
    */
   function handleAddTime() {
     console.log('async returnnnn');
+    currentTime = 0;
   }
 
   /*
