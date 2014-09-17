@@ -7,10 +7,11 @@
 
 (function() {
 
-  // The current count of the timer in ms
+  // var currentUser = findCurrentUser();
   var currentTime = 0;
   var timeoutStore;
   var timeIncrementInMs = 10;
+  var timeCheck;
 
   /*
   * Sets up the app and starts the timer
@@ -31,11 +32,21 @@
 
   /*
   * Updates the timer
+  * accounts for if the page gets backgrounded and stops intervals
   */
 
   function updateTimer() {
-    currentTime += 10;
+    if (!timeCheck) {
+      timeCheck = Date.now();
+    }
+    var intervalCheck = Date.now();
+    if (intervalCheck - timeCheck > 10) {
+      currentTime += intervalCheck - timeCheck;
+    } else {
+      currentTime += 10;
+    }
     redrawTimer();
+    timeCheck = Date.now();
   }
 
   /*
@@ -50,6 +61,55 @@
       document.getElementById('timerMinutes').innerHTML = timeInMinutes;
     }
     document.getElementById('timerSeconds').innerHTML = timeInSeconds;
+  }
+
+  /*
+   * Stops the timer and pushes it to the database
+   */
+  function stopTimer() {
+    if (timeoutStore) {
+      clearInterval(timeoutStore);
+      uploadTime();
+    }
+  }
+
+  /*
+   * uploads the time for the current user
+   */
+  function uploadTime() {
+    var currentUser = findCurrentUser();
+    var payload = {
+      "user": currentUser,
+      "time": currentTime
+    }
+    ajax('add', handleAddTime, "POST", payload);
+  }
+
+  /*
+   * handles response of adding time
+   */
+  function handleAddTime() {
+    console.log('async returnnnn');
+  }
+
+  /*
+   * Generic function for ajax calls
+   */
+  function ajax(query, functionName, method, payload) {
+    var req = new XMLHttpRequest();
+    req.onload = functionName;
+    req.open(method, '/' + query, true);
+    if (method == "POST") {
+      req.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+    }
+    req.send(JSON.stringify(payload));
+  }
+
+  /*
+   * gets the current user
+   */
+  function findCurrentUser() {
+    return "stefan"
   }
 
   init();
