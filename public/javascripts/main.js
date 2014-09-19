@@ -10,7 +10,7 @@
   // var currentUser = findCurrentUser();
   var currentTime = 0;
   var timeoutStore;
-  var timeIncrementInMs = 100;
+  var timeIncrementInMs = 1000;
   var timeCheck;
 
   /*
@@ -27,7 +27,9 @@
    */
   function setup() {
     currentTime = 0;
-    timeIncrementInMs = 100;
+    timeIncrementInMs = 1000;
+    document.getElementById('timerdisplay').innerHTML = "0:0"
+    document.getElementById('stoptimer').onclick = stopTimer;
   }
 
   /*
@@ -62,13 +64,11 @@
   */
 
   function redrawTimer() {
-    var timeInSeconds = currentTime / 1000;
-    if (timeInSeconds > 60) {
-      timeInSeconds = 0;
-      //var timeInMinutes = parseInt(document.getElementById('timerMinutes'), 10) + 1;
-      //document.getElementById('timerMinutes').innerHTML = timeInMinutes;
-    }
-    document.getElementById('timerSeconds').innerHTML = timeInSeconds;
+    var timeInSeconds = Math.floor(currentTime / 1000);
+    var displaySeconds = timeInSeconds % 60;
+    var displayMinutes = Math.floor(timeInSeconds / 60);
+    var timeDisplay = displayMinutes + ":" + displaySeconds;
+    document.getElementById('timerdisplay').innerHTML = timeDisplay;
   }
 
   /*
@@ -89,7 +89,7 @@
     var payload = {
       "user": currentUser,
       "time": currentTime
-    }
+    };
     ajax('add', handleAddTime, "POST", payload);
   }
 

@@ -1,0 +1,11 @@
+{
+    "users": [
+        {
+            "name": "stefan",
+            "showerTimes": [
+                2000,
+                3003
+            ]
+        }
+    ]
+}
